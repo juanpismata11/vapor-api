@@ -29,10 +29,16 @@ API RESTful desarrollada con **Vapor (Swift)** para gestionar productos, ingredi
 
 - `GET /productos`
 - `POST /productos`
+- `PUT /productos`
+- `DELETE /productos`
 - `GET /ingredientes`
 - `POST /ingredientes`
+- `PUT /ingredientes`
+- `DELETE /ingredientes`
 - `GET /recetas`
 - `POST /recetas`
+- `PUT /recetas`
+- `DELETE /recetas`
 
 ##  Docker
 
