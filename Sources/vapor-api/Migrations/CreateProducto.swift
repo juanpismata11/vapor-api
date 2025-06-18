@@ -1,6 +1,6 @@
 import Fluent
 import Vapor
-import FluentSQL
+import SQLKit
 
 struct CreateProducto: AsyncMigration {
     func prepare(on database: any Database) async throws {
@@ -9,7 +9,7 @@ struct CreateProducto: AsyncMigration {
             .field("nombre", .string, .required)
             .field("precio", .double, .required)
             .field("activo", .bool, .required, .sql(.default(true)))
-            .field("fecha_creacion", .datetime, .required, .sql(.default(.function(SQLRaw"CURRENT_TIMESTAMP"))))
+            .field("fecha_creacion", .datetime, .required, .sql(.default(SQLRaw("CURRENT_TIMESTAMP"))))
             .unique(on: "nombre")
             .create()
     }
