@@ -2,7 +2,7 @@ import Fluent
 import Vapor
 
 struct ProductoController: RouteCollection {
-    func boot(routes: RoutesBuilder) throws {
+    func boot(routes: any RoutesBuilder) throws {
         let productos = routes.grouped("productos")
 
         productos.get(use: self.index)
