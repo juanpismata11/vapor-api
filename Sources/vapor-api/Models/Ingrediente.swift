@@ -28,7 +28,14 @@ final class Ingrediente: Model, Content, @unchecked Sendable {
     
     init() { }
     
-    init(id: Int? = nil, nombre: String, unidadMedida: UnidadMedida, stockActual: Double, stockMinimo: Double, costo: Double) {
+    init(
+        id: Int? = nil,
+        nombre: String,
+        unidadMedida: UnidadMedida,
+        stockActual: Double,
+        stockMinimo: Double,
+        costo: Double
+    ) {
         self.id = id
         self.nombre = nombre
         self.unidadMedida = unidadMedida
