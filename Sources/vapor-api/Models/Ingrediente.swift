@@ -1,10 +1,7 @@
 import Fluent
-import struct Foundation.UUID
+import Foundation
 
-/// Property wrappers interact poorly with `Sendable` checking, causing a warning for the `@ID` property
-/// It is recommended you write your model with sendability checking on and then suppress the warning
-/// afterwards with `@unchecked Sendable`.
-final class Ingrediente: Model, @unchecked Sendable {
+final class Ingrediente: Model, Content, @unchecked Sendable {
     static let schema = "ingredientes"
     
     @ID(key: .id)
@@ -18,7 +15,7 @@ final class Ingrediente: Model, @unchecked Sendable {
 
     @Field(key: "stock_actual")
     var stockActual: Double
-    
+
     @Field(key: "stock_minimo")
     var stockMinimo: Double
 
@@ -28,7 +25,7 @@ final class Ingrediente: Model, @unchecked Sendable {
     @Timestamp(key: "fecha_actualizacion", on: .update)
     var fechaActualizacion: Date?
 
-    init() { }
+    init() {}
 
     init(nombre: String, unidadMedida: String, stockActual: Double, stockMinimo: Double, costo: Double) {
         self.nombre = nombre
