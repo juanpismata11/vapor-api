@@ -42,9 +42,6 @@
   #     MYSQL_RANDOM_ROOT_PASSWORD: 'yes'
   #   ports:
   #     - '3311:3306'
-
-  version: '3.8'
-
   services:
     api:
       build: .
