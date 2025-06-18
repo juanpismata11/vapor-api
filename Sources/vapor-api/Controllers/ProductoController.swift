@@ -2,7 +2,7 @@ import Fluent
 import Vapor
 
 struct ProductoController: RouteCollection {
-    func boot(routes: any RoutesBuilder) throws {
+    func boot(routes: RoutesBuilder) throws {
         let productos = routes.grouped("productos")
 
         productos.get(use: self.index)
@@ -12,42 +12,65 @@ struct ProductoController: RouteCollection {
     }
 
     func index(req: Request) async throws -> [Producto] {
-        try await Producto.query(on: req.db).all()
+        do {
+            return try await Producto.query(on: req.db).all()
+        } catch {
+            req.logger.error("Error al obtener productos: \(error.localizedDescription)")
+            req.logger.report(error: error)
+            throw Abort(.internalServerError, reason: "No se pudieron obtener los productos.")
+        }
     }
 
     func create(req: Request) async throws -> Producto {
-        let producto = try req.content.decode(Producto.self)
-        try await producto.save(on: req.db)
-        return producto
+        do {
+            let producto = try req.content.decode(Producto.self)
+            try await producto.save(on: req.db)
+            return producto
+        } catch {
+            req.logger.error("Error al crear producto: \(error.localizedDescription)")
+            req.logger.report(error: error)
+            throw Abort(.internalServerError, reason: "No se pudo crear el producto.")
+        }
     }
 
-   func update(req: Request) async throws -> Producto {
-        guard let id = req.parameters.get("id", as: Int.self) else {
-            throw Abort(.badRequest)
+    func update(req: Request) async throws -> Producto {
+        do {
+            guard let id = req.parameters.get("id", as: Int.self) else {
+                throw Abort(.badRequest, reason: "ID inválido.")
+            }
+
+            let input = try req.content.decode(Producto.self)
+
+            guard let producto = try await Producto.find(id, on: req.db) else {
+                throw Abort(.notFound, reason: "Producto no encontrado.")
+            }
+
+            producto.nombre = input.nombre
+            producto.precio = input.precio
+            producto.activo = input.activo
+
+            try await producto.save(on: req.db)
+            return producto
+        } catch {
+            req.logger.error("Error al actualizar producto: \(error.localizedDescription)")
+            req.logger.report(error: error)
+            throw Abort(.internalServerError, reason: "No se pudo actualizar el producto.")
         }
-
-        let input = try req.content.decode(Producto.self)
-
-        guard let producto = try await Producto.find(id, on: req.db) else {
-            throw Abort(.notFound)
-        }
-
-        producto.nombre = input.nombre
-        producto.precio = input.precio
-        producto.activo = input.activo
-
-        try await producto.save(on: req.db)
-        return producto
     }
-
 
     func delete(req: Request) async throws -> HTTPStatus {
-        guard let id = req.parameters.get("id", as: Int.self),
-              let producto = try await Producto.find(id, on: req.db) else {
-            throw Abort(.notFound)
-        }
+        do {
+            guard let id = req.parameters.get("id", as: Int.self),
+                  let producto = try await Producto.find(id, on: req.db) else {
+                throw Abort(.notFound, reason: "Producto no encontrado.")
+            }
 
-        try await producto.delete(on: req.db)
-        return .noContent
+            try await producto.delete(on: req.db)
+            return .noContent
+        } catch {
+            req.logger.error("Error al eliminar producto: \(error.localizedDescription)")
+            req.logger.report(error: error)
+            throw Abort(.internalServerError, reason: "No se pudo eliminar el producto.")
+        }
     }
 }
