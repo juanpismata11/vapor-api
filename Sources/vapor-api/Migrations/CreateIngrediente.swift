@@ -2,15 +2,16 @@ import Fluent
 import Vapor
 
 struct CreateIngrediente: AsyncMigration {
-    func prepare(on database: Database) async throws {
-        try await database.enum("unidad_medida_enum")
+    func prepare(on database: any Database) async throws {
+        let unidadMedidaEnum = database.enum("unidad_medida_enum")
             .case("unidad").case("kg").case("lt").case("gr").case("ml")
-            .create()
+
+        try await unidadMedidaEnum.create()
         
         try await database.schema("ingredientes")
             .field("id_ingrediente", .int, .identifier(auto: true))
             .field("nombre", .string, .required)
-            .field("unidad_medida", .enum("unidad_medida_enum"), .required)
+            .field("unidad_medida", .enum(unidadMedidaEnum), .required)  // <- usa la variable aquí
             .field("stock_actual", .double, .required)
             .field("stock_minimo", .double, .required)
             .field("costo", .double, .required)
@@ -19,7 +20,7 @@ struct CreateIngrediente: AsyncMigration {
             .create()
     }
     
-    func revert(on database: Database) async throws {
+    func revert(on database: any Database) async throws {
         try await database.schema("ingredientes").delete()
         try await database.enum("unidad_medida_enum").delete()
     }

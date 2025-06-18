@@ -2,7 +2,7 @@ import Fluent
 import Vapor
 
 struct RecetaController: RouteCollection {
-    func boot(routes: RoutesBuilder) throws {
+    func boot(routes: any RoutesBuilder) throws {
         let recetas = routes.grouped("recetas")
 
         recetas.get(use: self.index)
@@ -25,7 +25,7 @@ struct RecetaController: RouteCollection {
     }
 
     func update(req: Request) async throws -> Receta {
-        guard let id = req.parameters.get("id", as: UUID.self) else {
+        guard let id = req.parameters.get("id", as: Int.self) else {
             throw Abort(.badRequest)
         }
 
@@ -43,7 +43,7 @@ struct RecetaController: RouteCollection {
     }
 
     func delete(req: Request) async throws -> HTTPStatus {
-        guard let id = req.parameters.get("id", as: UUID.self),
+        guard let id = req.parameters.get("id", as: Int.self),
               let receta = try await Receta.find(id, on: req.db) else {
             throw Abort(.notFound)
         }

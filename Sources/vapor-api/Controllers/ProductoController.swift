@@ -21,8 +21,8 @@ struct ProductoController: RouteCollection {
         return producto
     }
 
-    func update(req: Request) async throws -> Producto {
-        guard let id = req.parameters.get("id", as: UUID.self) else {
+   func update(req: Request) async throws -> Producto {
+        guard let id = req.parameters.get("id", as: Int.self) else {
             throw Abort(.badRequest)
         }
 
@@ -40,8 +40,9 @@ struct ProductoController: RouteCollection {
         return producto
     }
 
+
     func delete(req: Request) async throws -> HTTPStatus {
-        guard let id = req.parameters.get("id", as: UUID.self),
+        guard let id = req.parameters.get("id", as: Int.self),
               let producto = try await Producto.find(id, on: req.db) else {
             throw Abort(.notFound)
         }

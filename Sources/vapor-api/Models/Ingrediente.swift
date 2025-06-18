@@ -1,5 +1,6 @@
 import Fluent
 import Vapor
+import Foundation
 
 final class Ingrediente: Model, Content {
     static let schema = "ingredientes"
