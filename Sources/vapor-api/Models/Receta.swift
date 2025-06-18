@@ -1,5 +1,5 @@
 import Fluent
-import Foundation
+import Vapor
 
 final class Receta: Model, Content, @unchecked Sendable {
     static let schema = "recetas"
@@ -18,7 +18,8 @@ final class Receta: Model, Content, @unchecked Sendable {
 
     init() {}
 
-    init(productoID: UUID, ingredienteID: UUID, cantidad: Double) {
+    init(id: Int? = nil,productoID: UUID, ingredienteID: UUID, cantidad: Double) {
+        self.id = id
         self.$producto.id = productoID
         self.$ingrediente.id = ingredienteID
         self.cantidad = cantidad

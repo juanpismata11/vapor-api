@@ -17,6 +17,7 @@ app.databases.use(DatabaseConfigurationFactory.mysql(
     ), as: .mysql)
 
     app.migrations.add(CreateTodo())
+    app.migrations.add(CreateIngrediente()) 
 
     // register routes
     try routes(app)

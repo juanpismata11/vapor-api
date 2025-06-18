@@ -1,5 +1,5 @@
 import Fluent
-import Foundation
+import Vapor
 
 final class Producto: Model, Content, @unchecked Sendable {
     static let schema = "productos"
@@ -21,7 +21,8 @@ final class Producto: Model, Content, @unchecked Sendable {
 
     init() {}
 
-    init(nombre: String, precio: Double, activo: Bool) {
+    init(id: Int? = nil,nombre: String, precio: Double, activo: Bool) {
+        self.id = id
         self.nombre = nombre
         self.precio = precio
         self.activo = activo

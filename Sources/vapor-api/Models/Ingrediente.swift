@@ -1,37 +1,46 @@
 import Fluent
-import Foundation
+import Vapor
 
-final class Ingrediente: Model, Content, @unchecked Sendable {
+final class Ingrediente: Model, Content {
     static let schema = "ingredientes"
     
-    @ID(key: .id)
-    var id: UUID?
-
+    @ID(custom: "id_ingrediente")
+    var id: Int?
+    
     @Field(key: "nombre")
     var nombre: String
-
-    @Field(key: "unidad_medida")
-    var unidadMedida: String
-
+    
+    @Enum(key: "unidad_medida")
+    var unidadMedida: UnidadMedida
+    
     @Field(key: "stock_actual")
     var stockActual: Double
-
+    
     @Field(key: "stock_minimo")
     var stockMinimo: Double
-
+    
     @Field(key: "costo")
     var costo: Double
-
+    
     @Timestamp(key: "fecha_actualizacion", on: .update)
     var fechaActualizacion: Date?
-
-    init() {}
-
-    init(nombre: String, unidadMedida: String, stockActual: Double, stockMinimo: Double, costo: Double) {
+    
+    init() { }
+    
+    init(id: Int? = nil, nombre: String, unidadMedida: UnidadMedida, stockActual: Double, stockMinimo: Double, costo: Double) {
+        self.id = id
         self.nombre = nombre
         self.unidadMedida = unidadMedida
         self.stockActual = stockActual
         self.stockMinimo = stockMinimo
         self.costo = costo
     }
+}
+
+enum UnidadMedida: String, Codable, CaseIterable {
+    case unidad = "unidad"
+    case kilogramo = "kg"
+    case litro = "lt"
+    case gramo = "gr"
+    case mililitro = "ml"
 }
