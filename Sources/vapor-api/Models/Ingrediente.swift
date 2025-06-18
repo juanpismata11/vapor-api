@@ -13,21 +13,28 @@ final class Ingrediente: Model, @unchecked Sendable {
     @Field(key: "nombre")
     var nombre: String
 
-    @Field(key: "cantidad")
-    var cantidad: Int
+    @Field(key: "unidad_medida")
+    var unidadMedida: String
 
-    @Field(key: "unidad")
-    var unidad: String
+    @Field(key: "stock_actual")
+    var stockActual: Double
     
-    @Field(key: "precio_unitario")
-    var precioUnitario: Double
+    @Field(key: "stock_minimo")
+    var stockMinimo: Double
+
+    @Field(key: "costo")
+    var costo: Double
+
+    @Timestamp(key: "fecha_actualizacion", on: .update)
+    var fechaActualizacion: Date?
 
     init() { }
 
-    init(id: UUID? = nil, nombre: String, cantidad: Int, unidad: String, precio_unitario: Double) {
+    init(nombre: String, unidadMedida: String, stockActual: Double, stockMinimo: Double, costo: Double) {
         self.nombre = nombre
-        self.cantidad = cantidad
-        self.unidad = unidad
-        self.precio_unitario = precio_unitario
+        self.unidadMedida = unidadMedida
+        self.stockActual = stockActual
+        self.stockMinimo = stockMinimo
+        self.costo = costo
     }
 }
